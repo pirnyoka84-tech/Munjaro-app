@@ -1,0 +1,8 @@
+package hu.mounjarosegito.app;
+import android.Manifest;import android.app.*;import android.os.*;import android.webkit.*;import android.content.*;import org.json.*;
+public class MainActivity extends Activity {
+ WebView web;
+ @Override public void onCreate(Bundle b){super.onCreate(b);getWindow().setStatusBarColor(0xff7044a3); web=new WebView(this);web.getSettings().setJavaScriptEnabled(true);web.getSettings().setDomStorageEnabled(true);web.getSettings().setAllowFileAccess(true);web.addJavascriptInterface(new Bridge(),"Android");web.setWebViewClient(new WebViewClient());setContentView(web);web.loadUrl("file:///android_asset/index.html");if(Build.VERSION.SDK_INT>=33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=getPackageManager().PERMISSION_GRANTED)requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},1);}
+ public class Bridge { @JavascriptInterface public void schedule(String json){getSharedPreferences("mj",0).edit().putString("settings",json).apply();ReminderScheduler.schedule(MainActivity.this,json);} @JavascriptInterface public void requestNotifications(){runOnUiThread(()->{if(Build.VERSION.SDK_INT>=33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=getPackageManager().PERMISSION_GRANTED)requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},1);else new AlertDialog.Builder(MainActivity.this).setMessage("Az Android értesítések engedélyezve vannak. Az időpontok hozzávetőlegesek lehetnek.").setPositiveButton("OK",null).show();});}}
+ @Override public void onBackPressed(){if(web.canGoBack())web.goBack();else super.onBackPressed();}
+}

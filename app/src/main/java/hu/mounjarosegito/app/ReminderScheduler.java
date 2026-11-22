@@ -1,0 +1,8 @@
+package hu.mounjarosegito.app;
+import android.app.*;import android.content.*;import android.os.*;import org.json.*;import java.util.*;
+public class ReminderScheduler {
+ static final String[] KEYS={"breakfast","water","lunch","walk","dinner","injtime"};
+ static final String[] TITLES={"🥣 Reggeli","💧 Folyadék","🍲 Ebéd","🚶 Mozgás","🥗 Vacsora","💉 Injekciós emlékeztető"};
+ static void schedule(Context c,String json){try{JSONObject j=new JSONObject(json);AlarmManager a=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);for(int i=0;i<KEYS.length;i++){Intent intent=new Intent(c,ReminderReceiver.class).putExtra("idx",i);PendingIntent pi=PendingIntent.getBroadcast(c,i,intent,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);a.cancel(pi);if(i==5&&(j.optString("dose","").trim().isEmpty()||j.optString("injday","").isEmpty()))continue;String time=j.optString(KEYS[i],"");if(!time.matches("[0-2][0-9]:[0-5][0-9]"))continue;String[] t=time.split(":");Calendar when=Calendar.getInstance();when.set(Calendar.HOUR_OF_DAY,Integer.parseInt(t[0]));when.set(Calendar.MINUTE,Integer.parseInt(t[1]));when.set(Calendar.SECOND,0);when.set(Calendar.MILLISECOND,0);if(i==5){int target=Integer.parseInt(j.optString("injday","0"))+1;int offset=(target-when.get(Calendar.DAY_OF_WEEK)+7)%7;when.add(Calendar.DATE,offset);}if(when.getTimeInMillis()<=System.currentTimeMillis())when.add(Calendar.DATE,i==5?7:1);a.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,when.getTimeInMillis(),pi);}}catch(Exception ignored){}}
+ static void next(Context c){String j=c.getSharedPreferences("mj",0).getString("settings",null);if(j!=null)schedule(c,j);}
+}

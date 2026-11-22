@@ -1,0 +1,12 @@
+MOUNJARO SEGÍTŐ – ANDROID STUDIO PROJEKT (nem APK)
+
+1. Telepítsd az Android Studio programot számítógépre.
+2. File > Open: válaszd a MounjaroSegito_AndroidStudio mappát.
+3. Várd meg a Gradle Sync-et (internet szükséges).
+4. Build > Build Bundle(s) / APK(s) > Build APK(s).
+5. Az APK helye: app/build/outputs/apk/debug/app-debug.apk.
+6. Másold Samsung telefonra, és csak akkor telepítsd, ha megbízol a saját buildedben.
+
+Az alkalmazás helyben tárolja az adatokat. Az emlékeztetők Android AlarmManager alapú, hozzávetőleges idejű jelzések; energiatakarékosság késleltetheti őket. A POST_NOTIFICATIONS engedély szükséges. Az alkalmazás nincs eszközön tesztelve. A már korábban HTML fájlba mentett adatok nem kerülnek automatikusan át.
+
+Az injekciós adagot kizárólag orvosi előírás alapján kell megadni; a szoftver nem ad adagolási tanácsot. Az étrend és mozgás minta, nem személyre szabott kezelési terv.
